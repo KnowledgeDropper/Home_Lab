@@ -1,0 +1,523 @@
+annotations:
+  - border_color: '#00000000'
+    border_style: ''
+    color: '#F2FC03'
+    rotation: 0
+    text_bold: false
+    text_content: 10.0.0.0/31
+    text_font: monospace
+    text_italic: false
+    text_size: 12
+    text_unit: pt
+    thickness: 1
+    type: text
+    x1: -596.8518518518518
+    y1: -33.70370370370371
+    z_index: 0
+  - border_color: '#00000000'
+    border_style: ''
+    color: '#F2FC03'
+    rotation: 319
+    text_bold: false
+    text_content: 10.0.0.8/31
+    text_font: monospace
+    text_italic: false
+    text_size: 12
+    text_unit: pt
+    thickness: 1
+    type: text
+    x1: -398.2630268153975
+    y1: -117.51918360065764
+    z_index: 0
+  - border_color: '#00000000'
+    border_style: ''
+    color: '#F2FC03'
+    rotation: 340
+    text_bold: false
+    text_content: 10.0.0.6/31
+    text_font: monospace
+    text_italic: false
+    text_size: 12
+    text_unit: pt
+    thickness: 1
+    type: text
+    x1: -353.90706804731997
+    y1: -74.83418707055006
+    z_index: 0
+  - border_color: '#00000000'
+    border_style: ''
+    color: '#F2FC03'
+    rotation: 10
+    text_bold: false
+    text_content: 10.0.0.4/31
+    text_font: monospace
+    text_italic: false
+    text_size: 12
+    text_unit: pt
+    thickness: 1
+    type: text
+    x1: -340.4320984627683
+    y1: -0.8024725093475524
+    z_index: 0
+  - border_color: '#00000000'
+    border_style: ''
+    color: '#F2FC03'
+    rotation: 36
+    text_bold: false
+    text_content: 10.0.0.2/31
+    text_font: monospace
+    text_italic: false
+    text_size: 12
+    text_unit: pt
+    thickness: 1
+    type: text
+    x1: -377.9629657261866
+    y1: 96.91357969975158
+    z_index: 0
+smart_annotations: []
+nodes:
+  - boot_disk_size: null
+    configuration:
+      - name: iosxe_config.txt
+        content: |-
+          hostname Router0
+          interface GigabitEthernet1
+            ip address 10.0.0.0 255.255.255.254
+            no shutdown
+          interface GigabitEthernet2
+            ip address 10.0.0.4 255.255.255.254
+            no shutdown
+          interface GigabitEthernet3
+            ip address 10.0.0.8 255.255.255.254
+            no shutdown
+          interface GigabitEthernet4
+            ip address 10.0.0.12 255.255.255.254
+            no shutdown
+          ! DMVPN Hub configuration with PKI encryption
+          crypto pki trustpoint TP-self-signed-0
+            enrollment selfsigned
+            subject-name cn=Router0
+            revocation-check none
+            rsakeypair TP-self-signed-0
+          crypto pki authenticate TP-self-signed-0
+          crypto pki enroll TP-self-signed-0
+          crypto isakmp profile DMVPN_PROFILE
+            match identity address
+            keyring DMVPN_KEYRING
+          crypto keyring DMVPN_KEYRING
+            pre-shared-key address 0.0.0.0 0.0.0.0 key cisco123
+          interface Tunnel0
+            ip address 10.255.0.1 255.255.255.0
+            tunnel source GigabitEthernet1
+            tunnel mode gre multipoint
+            tunnel key 100
+            tunnel protection ipsec profile DMVPN_PROFILE
+          router eigrp 100
+            network 10.0.0.0 0.0.0.15
+          !
+          ! Additional PKI and DMVPN hub configs here
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n0
+    image_definition: null
+    label: Router5 (DMVPN Hub)
+    node_definition: cat8000v
+    parameters: {}
+    ram: null
+    tags: []
+    x: -640
+    y: 0
+    interfaces:
+      - id: i0
+        label: Loopback0
+        mac_address: null
+        type: loopback
+      - id: i1
+        label: GigabitEthernet1
+        mac_address: null
+        type: physical
+        slot: 0
+      - id: i2
+        label: GigabitEthernet2
+        mac_address: null
+        type: physical
+        slot: 1
+      - id: i3
+        label: GigabitEthernet3
+        mac_address: null
+        type: physical
+        slot: 2
+      - id: i4
+        label: GigabitEthernet4
+        mac_address: null
+        type: physical
+        slot: 3
+  - boot_disk_size: null
+    configuration:
+      - name: iosxe_config.txt
+        content: |-
+          hostname Router1
+          interface GigabitEthernet1
+            ip address 10.0.0.1 255.255.255.254
+            no shutdown
+          interface GigabitEthernet2
+            ip address 10.0.0.16 255.255.255.254
+            no shutdown
+          ! DMVPN Spoke configuration with PKI encryption
+          crypto pki trustpoint TP-self-signed-1
+            enrollment selfsigned
+            subject-name cn=Router1
+            revocation-check none
+            rsakeypair TP-self-signed-1
+          crypto pki authenticate TP-self-signed-1
+          crypto pki enroll TP-self-signed-1
+          crypto isakmp profile DMVPN_PROFILE
+            match identity address
+            keyring DMVPN_KEYRING
+          crypto keyring DMVPN_KEYRING
+            pre-shared-key address 0.0.0.0 0.0.0.0 key cisco123
+          interface Tunnel0
+            ip address 10.255.0.2 255.255.255.0
+            tunnel source GigabitEthernet1
+            tunnel mode gre multipoint
+            tunnel key 100
+            tunnel protection ipsec profile DMVPN_PROFILE
+          router eigrp 100
+            network 10.0.0.0 0.0.0.31
+          !
+          ! Additional PKI and DMVPN spoke configs here
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n1
+    image_definition: null
+    label: Router1 (DMVPN Spoke)
+    node_definition: cat8000v
+    parameters: {}
+    ram: null
+    tags: []
+    x: -200
+    y: 160
+    interfaces:
+      - id: i0
+        label: Loopback0
+        mac_address: null
+        type: loopback
+      - id: i1
+        label: GigabitEthernet1
+        mac_address: null
+        type: physical
+        slot: 0
+      - id: i2
+        label: GigabitEthernet2
+        mac_address: null
+        type: physical
+        slot: 1
+  - boot_disk_size: null
+    configuration:
+      - name: iosxe_config.txt
+        content: |-
+          hostname Router2
+          interface GigabitEthernet1
+            ip address 10.0.0.5 255.255.255.254
+            no shutdown
+          interface GigabitEthernet2
+            ip address 10.0.0.20 255.255.255.254
+            no shutdown
+          ! DMVPN Spoke configuration with PKI encryption
+          crypto pki trustpoint TP-self-signed-2
+            enrollment selfsigned
+            subject-name cn=Router2
+            revocation-check none
+            rsakeypair TP-self-signed-2
+          crypto pki authenticate TP-self-signed-2
+          crypto pki enroll TP-self-signed-2
+          crypto isakmp profile DMVPN_PROFILE
+            match identity address
+            keyring DMVPN_KEYRING
+          crypto keyring DMVPN_KEYRING
+            pre-shared-key address 0.0.0.0 0.0.0.0 key cisco123
+          interface Tunnel0
+            ip address 10.255.0.3 255.255.255.0
+            tunnel source GigabitEthernet1
+            tunnel mode gre multipoint
+            tunnel key 100
+            tunnel protection ipsec profile DMVPN_PROFILE
+          router eigrp 100
+            network 10.0.0.0 0.0.0.31
+          !
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n2
+    image_definition: null
+    label: Router2 (DMVPN Spoke)
+    node_definition: cat8000v
+    parameters: {}
+    ram: null
+    tags: []
+    x: -200
+    y: 40
+    interfaces:
+      - id: i0
+        label: Loopback0
+        mac_address: null
+        type: loopback
+      - id: i1
+        label: GigabitEthernet1
+        mac_address: null
+        type: physical
+        slot: 0
+      - id: i2
+        label: GigabitEthernet2
+        mac_address: null
+        type: physical
+        slot: 1
+  - boot_disk_size: null
+    configuration:
+      - name: iosxe_config.txt
+        content: |-
+          hostname Router3
+          interface GigabitEthernet1
+            ip address 10.0.0.9 255.255.255.254
+            no shutdown
+          interface GigabitEthernet2
+            ip address 10.0.0.24 255.255.255.254
+            no shutdown
+          ! DMVPN Spoke configuration with PKI encryption
+          crypto pki trustpoint TP-self-signed-3
+            enrollment selfsigned
+            subject-name cn=Router3
+            revocation-check none
+            rsakeypair TP-self-signed-3
+          crypto pki authenticate TP-self-signed-3
+          crypto pki enroll TP-self-signed-3
+          crypto isakmp profile DMVPN_PROFILE
+            match identity address
+            keyring DMVPN_KEYRING
+          crypto keyring DMVPN_KEYRING
+            pre-shared-key address 0.0.0.0 0.0.0.0 key cisco123
+          interface Tunnel0
+            ip address 10.255.0.4 255.255.255.0
+            tunnel source GigabitEthernet1
+            tunnel mode gre multipoint
+            tunnel key 100
+            tunnel protection ipsec profile DMVPN_PROFILE
+          router eigrp 100
+            network 10.0.0.0 0.0.0.31
+          !
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n3
+    image_definition: null
+    label: Router3 (DMVPN Spoke)
+    node_definition: cat8000v
+    parameters: {}
+    ram: null
+    tags: []
+    x: -200
+    y: -80
+    interfaces:
+      - id: i0
+        label: Loopback0
+        mac_address: null
+        type: loopback
+      - id: i1
+        label: GigabitEthernet1
+        mac_address: null
+        type: physical
+        slot: 0
+      - id: i2
+        label: GigabitEthernet2
+        mac_address: null
+        type: physical
+        slot: 1
+  - boot_disk_size: null
+    configuration:
+      - name: iosxe_config.txt
+        content: |-
+          hostname Router4
+          interface GigabitEthernet1
+            ip address 10.0.0.13 255.255.255.254
+            no shutdown
+          interface GigabitEthernet2
+            ip address 10.0.0.28 255.255.255.254
+            no shutdown
+          ! DMVPN Spoke configuration with PKI encryption
+          crypto pki trustpoint TP-self-signed-4
+            enrollment selfsigned
+            subject-name cn=Router4
+            revocation-check none
+            rsakeypair TP-self-signed-4
+          crypto pki authenticate TP-self-signed-4
+          crypto pki enroll TP-self-signed-4
+          crypto isakmp profile DMVPN_PROFILE
+            match identity address
+            keyring DMVPN_KEYRING
+          crypto keyring DMVPN_KEYRING
+            pre-shared-key address 0.0.0.0 0.0.0.0 key cisco123
+          interface Tunnel0
+            ip address 10.255.0.5 255.255.255.0
+            tunnel source GigabitEthernet1
+            tunnel mode gre multipoint
+            tunnel key 100
+            tunnel protection ipsec profile DMVPN_PROFILE
+          router eigrp 100
+            network 10.0.0.0 0.0.0.31
+          !
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n4
+    image_definition: null
+    label: Router4 (DMVPN Spoke)
+    node_definition: cat8000v
+    parameters: {}
+    ram: null
+    tags: []
+    x: -200
+    y: -200
+    interfaces:
+      - id: i0
+        label: Loopback0
+        mac_address: null
+        type: loopback
+      - id: i1
+        label: GigabitEthernet1
+        mac_address: null
+        type: physical
+        slot: 0
+      - id: i2
+        label: GigabitEthernet2
+        mac_address: null
+        type: physical
+        slot: 1
+  - boot_disk_size: null
+    configuration:
+      - name: iosxe_config.txt
+        content: |-
+          hostname Router5
+          interface GigabitEthernet1
+            ip address 10.0.0.2 255.255.255.254
+            no shutdown
+          interface GigabitEthernet2
+            ip address 10.0.0.6 255.255.255.254
+            no shutdown
+          interface GigabitEthernet3
+            ip address 10.0.0.10 255.255.255.254
+            no shutdown
+          interface GigabitEthernet4
+            ip address 10.0.0.14 255.255.255.254
+            no shutdown
+          interface GigabitEthernet5
+            ip address 10.0.0.18 255.255.255.254
+            no shutdown
+          router bgp 65000
+            bgp log-neighbor-changes
+            neighbor 10.0.0.1 remote-as 65000
+            neighbor 10.0.0.5 remote-as 65000
+            neighbor 10.0.0.9 remote-as 65000
+            neighbor 10.0.0.13 remote-as 65000
+            neighbor 10.0.0.17 remote-as 65000
+            !
+            address-family ipv4 unicast
+              network 10.0.0.0 mask 255.255.255.0
+              neighbor 10.0.0.1 activate
+              neighbor 10.0.0.5 activate
+              neighbor 10.0.0.9 activate
+              neighbor 10.0.0.13 activate
+              neighbor 10.0.0.17 activate
+            exit-address-family
+          !
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n5
+    image_definition: null
+    label: Router0 (BGP Router)
+    node_definition: cat8000v
+    parameters: {}
+    ram: null
+    tags: []
+    x: -440
+    y: 0
+    interfaces:
+      - id: i0
+        label: Loopback0
+        mac_address: null
+        type: loopback
+      - id: i1
+        label: GigabitEthernet1
+        mac_address: null
+        type: physical
+        slot: 0
+      - id: i2
+        label: GigabitEthernet2
+        mac_address: null
+        type: physical
+        slot: 1
+      - id: i3
+        label: GigabitEthernet3
+        mac_address: null
+        type: physical
+        slot: 2
+      - id: i4
+        label: GigabitEthernet4
+        mac_address: null
+        type: physical
+        slot: 3
+      - id: i5
+        label: GigabitEthernet5
+        mac_address: null
+        type: physical
+        slot: 4
+links:
+  - id: l0
+    n1: n0
+    n2: n5
+    i1: i1
+    i2: i1
+    conditioning: {}
+    label: Router0 (DMVPN Hub)-GigabitEthernet1<->Router5 (BGP Router)-GigabitEthernet1
+  - id: l1
+    n1: n5
+    n2: n1
+    i1: i2
+    i2: i1
+    conditioning: {}
+    label: Router5 (BGP Router)-GigabitEthernet2<->Router1 (DMVPN Spoke)-GigabitEthernet1
+  - id: l2
+    n1: n5
+    n2: n2
+    i1: i3
+    i2: i1
+    conditioning: {}
+    label: Router5 (BGP Router)-GigabitEthernet3<->Router2 (DMVPN Spoke)-GigabitEthernet1
+  - id: l3
+    n1: n5
+    n2: n3
+    i1: i4
+    i2: i1
+    conditioning: {}
+    label: Router5 (BGP Router)-GigabitEthernet4<->Router3 (DMVPN Spoke)-GigabitEthernet1
+  - id: l4
+    n1: n5
+    n2: n4
+    i1: i5
+    i2: i1
+    conditioning: {}
+    label: Router5 (BGP Router)-GigabitEthernet5<->Router4 (DMVPN Spoke)-GigabitEthernet1
+lab:
+  description: DMVPN hub-spoke with PKI encryption between routers 0-4 and BGP via
+    router 5.
+  notes: ''
+  title: CAT8000v DMVPN with PKI and BGP Topology
+  version: 0.3.0
